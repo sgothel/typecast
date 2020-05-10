@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 
 import net.java.dev.typecast.ot.table.GaspTable;
 import net.java.dev.typecast.ot.table.GlyfDescript;
@@ -177,4 +178,13 @@ public class TTFont extends OTFont {
         }
     }
 
+    @Override
+    public void dumpTo(Writer out) throws IOException {
+        super.dumpTo(out);
+        dump(out, getGlyfTable());
+        dump(out, getGaspTable());
+        dump(out, getKernTable());
+        dump(out, getHdmxTable());
+        dump(out, getVdmxTable());
+    }
 }
