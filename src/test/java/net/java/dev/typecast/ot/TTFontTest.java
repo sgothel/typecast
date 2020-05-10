@@ -19,6 +19,7 @@
 package net.java.dev.typecast.ot;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -51,12 +52,37 @@ public class TTFontTest extends TestCase {
     }
 
     public void testLoadFont() throws URISyntaxException, IOException {
-        final URL url = ClassLoader.getSystemResource("Lato-Regular.ttf");
+        TTFont font = loadFontResource("Lato-Regular.ttf");
+        assertEquals(HeadTable.class, font.getHeadTable().getClass());
+
+        dumpFont("Lato-Regular.txt", font);
+    }
+
+    public void testLoadColorFont() throws URISyntaxException, IOException {
+        TTFont font = loadFontResource("NotoColorEmoji.ttf");
+        dumpFont("NotoColorEmoji.txt", font);
+    }
+    
+    private void dumpFont(String name, TTFont font)
+            throws IOException, FileNotFoundException {
+        new File("target/tmp").mkdirs();
+        try (Writer out = new OutputStreamWriter(new FileOutputStream(new File("target/tmp/" + name)))) {
+            font.dumpTo(out);
+        }
+    }
+
+    private TTFont loadFontResource(String name)
+            throws URISyntaxException, IOException {
+        URL url = ClassLoader.getSystemResource(name);
+        TTFont font = loadFont(url);
+        return font;
+    }
+
+    private TTFont loadFont(URL url) throws URISyntaxException, IOException {
         final URLConnection con = url.openConnection();
         final int len = con.getContentLength();
         try(InputStream is = con.getInputStream()) {
-            TTFont font = new TTFont(is, len);
-            assertEquals(HeadTable.class, font.getHeadTable().getClass());
+            return new TTFont(is, len);
         }
     }
 }
