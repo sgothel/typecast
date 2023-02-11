@@ -60,12 +60,12 @@ import net.java.dev.typecast.ot.Fixed;
  */
 public class HeadTable implements Table {
 
-    private short _unitsPerEm;
     private final int _versionNumber;
     private final int _fontRevision;
     private final int _checkSumAdjustment;
     private final int _magicNumber;
     private final short _flags;
+    private final int _unitsPerEm;
     private final long _created;
     private final long _modified;
     private final short _xMin;
@@ -84,7 +84,7 @@ public class HeadTable implements Table {
         _checkSumAdjustment = di.readInt();
         _magicNumber = di.readInt();
         _flags = di.readShort();
-        _unitsPerEm = di.readShort();
+        _unitsPerEm = di.readUnsignedShort();
         _created = di.readLong();
         _modified = di.readLong();
         _xMin = di.readShort();
@@ -142,7 +142,7 @@ public class HeadTable implements Table {
         return head;
     }
 
-    public short getUnitsPerEm() {
+    public int getUnitsPerEm() {
         return _unitsPerEm;
     }
 

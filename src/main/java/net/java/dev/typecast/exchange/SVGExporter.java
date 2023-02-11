@@ -199,7 +199,7 @@ public class SVGExporter
     private static String getSVGFontFaceElement(OTFont font) {
         StringBuilder sb = new StringBuilder();
         String fontFamily = font.getNameTable().getRecordString(ID.nameFontFamilyName);
-        short unitsPerEm = font.getHeadTable().getUnitsPerEm();
+        int unitsPerEm = font.getHeadTable().getUnitsPerEm();
         String panose = font.getOS2Table().getPanose().toString();
         short ascent = font.getHheaTable().getAscender();
         short descent = font.getHheaTable().getDescender();
