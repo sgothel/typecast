@@ -164,11 +164,17 @@ public class TTFont extends OTFont {
         return _vdmx;
     }
 
-    public Glyph getGlyph(int i) {
-        return new TTGlyph(
-                _glyf.getDescription(i),
-                getHmtxTable().getLeftSideBearing(i),
-                getHmtxTable().getAdvanceWidth(i));
+    @Override
+    public Glyph getGlyph(final int i) {
+        final GlyfDescript glyfDescr = _glyf.getDescription(i);
+        if( null != glyfDescr ) {
+            return new TTGlyph(
+                    glyfDescr,
+                    getHmtxTable().getLeftSideBearing(i),
+                    getHmtxTable().getAdvanceWidth(i));
+        } else {
+            return null;
+        }
     }
 
 }
