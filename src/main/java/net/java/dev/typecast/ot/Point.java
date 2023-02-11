@@ -25,4 +25,8 @@ public class Point {
         this.onCurve = onCurve;
         this.endOfContour = endOfContour;
     }
+
+    public String toString() {
+        return "P["+x+"/"+y+", on "+onCurve+", end "+endOfContour+"]";
+    }
 }
