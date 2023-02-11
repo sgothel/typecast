@@ -36,6 +36,10 @@ public class KernSubtableFormat2 extends KernSubtable {
     }
 
     @Override
+    public void clearKerningPairs() {
+    }
+    
+    @Override
     public int getKerningPairCount() {
         return 0;
     }
