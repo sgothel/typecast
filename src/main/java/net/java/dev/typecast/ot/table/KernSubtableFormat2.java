@@ -1,9 +1,9 @@
 /*****************************************************************************
  * Copyright (C) The Apache Software Foundation. All rights reserved.        *
- * ------------------------------------------------------------------------- * 
- * This software is published under the terms of the Apache Software License * 
- * version 1.1, a copy of which has been included with this distribution in  * 
- * the LICENSE file.                                                         * 
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1, a copy of which has been included with this distribution in  *
+ * the LICENSE file.                                                         *
  *****************************************************************************/
 
 package net.java.dev.typecast.ot.table;
@@ -27,18 +27,21 @@ public class KernSubtableFormat2 extends KernSubtable {
     private final int array;
 
     /** Creates new KernSubtableFormat2 */
-    KernSubtableFormat2(DataInput di) throws IOException {
+    KernSubtableFormat2(final int version, final int length, final int coverage, final DataInput di) throws IOException {
+        super(version, length, coverage);
         rowWidth = di.readUnsignedShort();
         leftClassTable = di.readUnsignedShort();
         rightClassTable = di.readUnsignedShort();
         array = di.readUnsignedShort();
     }
 
+    @Override
     public int getKerningPairCount() {
         return 0;
     }
 
-    public KerningPair getKerningPair(int i) {
+    @Override
+    public KerningPair getKerningPair(final int i) {
         return null;
     }
 

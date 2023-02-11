@@ -1,9 +1,9 @@
 /*****************************************************************************
  * Copyright (C) The Apache Software Foundation. All rights reserved.        *
- * ------------------------------------------------------------------------- * 
- * This software is published under the terms of the Apache Software License * 
- * version 1.1, a copy of which has been included with this distribution in  * 
- * the LICENSE file.                                                         * 
+ * ------------------------------------------------------------------------- *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1, a copy of which has been included with this distribution in  *
+ * the LICENSE file.                                                         *
  *****************************************************************************/
 
 package net.java.dev.typecast.ot.table;
@@ -16,15 +16,16 @@ import java.io.IOException;
  * @author <a href="mailto:david.schweinsberg@gmail.com">David Schweinsberg</a>
  */
 public class KernSubtableFormat0 extends KernSubtable {
-    
+
     private int nPairs;
-    private int searchRange;
-    private int entrySelector;
-    private int rangeShift;
+    private final int searchRange;
+    private final int entrySelector;
+    private final int rangeShift;
     private KerningPair[] kerningPairs;
 
     /** Creates new KernSubtableFormat0 */
-    KernSubtableFormat0(DataInput di) throws IOException {
+    KernSubtableFormat0(final int version, final int length, final int coverage, final DataInput di) throws IOException {
+        super(version, length, coverage);
         nPairs = di.readUnsignedShort();
         searchRange = di.readUnsignedShort();
         entrySelector = di.readUnsignedShort();
@@ -35,11 +36,23 @@ public class KernSubtableFormat0 extends KernSubtable {
         }
     }
 
+    @Override
     public int getKerningPairCount() {
         return nPairs;
     }
 
-    public KerningPair getKerningPair(int i) {
+    public int getSearchRange() {
+        return searchRange;
+    }
+    public int getEntrySelector() {
+        return entrySelector;
+    }
+    public int getRangeShift() {
+        return rangeShift;
+    }
+
+    @Override
+    public KerningPair getKerningPair(final int i) {
         return kerningPairs[i];
     }
 
