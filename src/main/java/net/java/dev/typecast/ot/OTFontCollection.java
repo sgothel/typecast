@@ -35,8 +35,7 @@ import net.java.dev.typecast.ot.table.TTCHeader;
  *
  * @author <a href="mailto:david.schweinsberg@gmail.com">David Schweinsberg</a>
  */
-class OTFontCollection {
-
+public class OTFontCollection {
     private final boolean DEBUG = false;
     private TTCHeader _ttcHeader;
     private OTFont[] _fonts;
