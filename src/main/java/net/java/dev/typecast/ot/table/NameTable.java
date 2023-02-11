@@ -63,6 +63,7 @@ import java.io.IOException;
  */
 public class NameTable implements Table {
 
+    @SuppressWarnings("unused")
     private short _formatSelector;
     private short _numberOfNameRecords;
     private short _stringStorageOffset;

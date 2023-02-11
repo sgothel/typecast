@@ -60,23 +60,23 @@ import net.java.dev.typecast.ot.Fixed;
  */
 public class HeadTable implements Table {
 
-    private int _versionNumber;
-    private int _fontRevision;
-    private int _checkSumAdjustment;
-    private int _magicNumber;
-    private short _flags;
     private short _unitsPerEm;
-    private long _created;
-    private long _modified;
-    private short _xMin;
-    private short _yMin;
-    private short _xMax;
-    private short _yMax;
-    private short _macStyle;
-    private short _lowestRecPPEM;
-    private short _fontDirectionHint;
-    private short _indexToLocFormat;
-    private short _glyphDataFormat;
+    private final int _versionNumber;
+    private final int _fontRevision;
+    private final int _checkSumAdjustment;
+    private final int _magicNumber;
+    private final short _flags;
+    private final long _created;
+    private final long _modified;
+    private final short _xMin;
+    private final short _yMin;
+    private final short _xMax;
+    private final short _yMax;
+    private final short _macStyle;
+    private final short _lowestRecPPEM;
+    private final short _fontDirectionHint;
+    private final short _indexToLocFormat;
+    private final short _glyphDataFormat;
 
     public HeadTable(DataInput di) throws IOException {
         _versionNumber = di.readInt();

@@ -30,16 +30,6 @@ import net.java.dev.typecast.ot.table.*;
  */
 public abstract class OTFont {
 
-    private Os2Table _os2;
-    private CmapTable _cmap;
-    private HeadTable _head;
-    private HheaTable _hhea;
-    private HmtxTable _hmtx;
-    private MaxpTable _maxp;
-    private NameTable _name;
-    private PostTable _post;
-    private VheaTable _vhea;
-    private GsubTable _gsub;
 
     /**
      * @param fontData OpenType/TrueType font file data.
@@ -63,6 +53,16 @@ public abstract class OTFont {
         dis.mark(fontData.length);
         dis.reset();
 
+    private final Os2Table _os2;
+    private final CmapTable _cmap;
+    private final HeadTable _head;
+    private final HheaTable _hhea;
+    private final HmtxTable _hmtx;
+    private final MaxpTable _maxp;
+    private final NameTable _name;
+    private final PostTable _post;
+    private final VheaTable _vhea;
+    private final GsubTable _gsub;
         // Load some prerequisite tables
         // (These are tables that are referenced by other tables, so we need to load
         // them first)

@@ -28,12 +28,16 @@ import java.io.IOException;
 public class ResourceMap {
 
     private final byte[] headerCopy = new byte[16];
+    @SuppressWarnings("unused")
     private int nextResourceMap;
+    @SuppressWarnings("unused")
     private int fileReferenceNumber;
+    @SuppressWarnings("unused")
     private int attributes;
     private ResourceType[] types;
     
     /** Creates new ResourceMap */
+    @SuppressWarnings("unused")
     public ResourceMap(DataInput di) throws IOException {
         di.readFully(headerCopy);
         nextResourceMap = di.readInt();

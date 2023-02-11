@@ -63,12 +63,12 @@ public class TableDirectory {
 
     public static class Entry {
 
-        private int _tag;
-        private int _checksum;
-        private int _offset;
-        private int _length;
+        private final int _tag;
+        private final int _checksum;
+        private final int _offset;
+        private final int _length;
 
-        Entry(DataInput di) throws IOException {
+        Entry(final DataInput di) throws IOException {
             _tag = di.readInt();
             _checksum = di.readInt();
             _offset = di.readInt();
@@ -98,6 +98,7 @@ public class TableDirectory {
                     (char) ((_tag) & 0xff);
         }
 
+        @Override
         public String toString() {
             return "'" + getTagAsString() +
                     "' - chksm = 0x" + Integer.toHexString(_checksum) +
@@ -106,12 +107,12 @@ public class TableDirectory {
         }
     }
 
-    private int _version;
-    private short _numTables;
-    private short _searchRange;
-    private short _entrySelector;
-    private short _rangeShift;
-    private Entry[] _entries;
+    private final int _version;
+    private final short _numTables;
+    private final short _searchRange;
+    private final short _entrySelector;
+    private final short _rangeShift;
+    private final Entry[] _entries;
 
     public TableDirectory(byte[] fontData) throws IOException {
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(fontData));
@@ -126,11 +127,11 @@ public class TableDirectory {
         }
     }
 
-    public Entry getEntry(int index) {
+    public Entry getEntry(final int index) {
         return _entries[index];
     }
 
-    public Entry getEntryByTag(int tag) {
+    public Entry getEntryByTag(final int tag) {
         for (int i = 0; i < _numTables; i++) {
             if (_entries[i].getTag() == tag) {
                 return _entries[i];
@@ -158,9 +159,10 @@ public class TableDirectory {
     public int getVersion() {
         return _version;
     }
-    
+
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder()
+        final StringBuilder sb = new StringBuilder()
             .append("Offset Table\n------ -----")
             .append("\n  sfnt version:     ").append(Fixed.floatValue(_version))
             .append("\n  numTables =       ").append(_numTables)

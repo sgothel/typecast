@@ -17,10 +17,14 @@ import java.io.IOException;
  */
 public class KernSubtableFormat2 extends KernSubtable {
 
-    private int rowWidth;
-    private int leftClassTable;
-    private int rightClassTable;
-    private int array;
+    @SuppressWarnings("unused")
+    private final int rowWidth;
+    @SuppressWarnings("unused")
+    private final int leftClassTable;
+    @SuppressWarnings("unused")
+    private final int rightClassTable;
+    @SuppressWarnings("unused")
+    private final int array;
 
     /** Creates new KernSubtableFormat2 */
     KernSubtableFormat2(DataInput di) throws IOException {
