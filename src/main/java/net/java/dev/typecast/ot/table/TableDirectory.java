@@ -50,9 +50,7 @@
 
 package net.java.dev.typecast.ot.table;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInput;
-import java.io.DataInputStream;
 import java.io.IOException;
 import net.java.dev.typecast.ot.Fixed;
 
@@ -114,16 +112,15 @@ public class TableDirectory {
     private final short _rangeShift;
     private final Entry[] _entries;
 
-    public TableDirectory(byte[] fontData) throws IOException {
-        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(fontData));
-        _version = dis.readInt();
-        _numTables = dis.readShort();
-        _searchRange = dis.readShort();
-        _entrySelector = dis.readShort();
-        _rangeShift = dis.readShort();
+    public TableDirectory(final DataInput di) throws IOException {
+        _version = di.readInt();
+        _numTables = di.readShort();
+        _searchRange = di.readShort();
+        _entrySelector = di.readShort();
+        _rangeShift = di.readShort();
         _entries = new Entry[_numTables];
         for (int i = 0; i < _numTables; i++) {
-            _entries[i] = new Entry(dis);
+            _entries[i] = new Entry(di);
         }
     }
 

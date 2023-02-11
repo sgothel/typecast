@@ -21,6 +21,7 @@ package net.java.dev.typecast.ot;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 
 import junit.framework.Test;
@@ -46,10 +47,12 @@ public class TTFontTest extends TestCase {
     }
 
     public void testLoadFont() throws URISyntaxException, IOException {
-        URL url = ClassLoader.getSystemResource("Lato-Regular.ttf");
-        File file = new File(url.toURI());
-        byte[] fontData = Files.readAllBytes(file.toPath());
-        TTFont font = new TTFont(fontData, 0);
-        assertEquals(HeadTable.class, font.getHeadTable().getClass());
+        final URL url = ClassLoader.getSystemResource("Lato-Regular.ttf");
+        final URLConnection con = url.openConnection();
+        final int len = con.getContentLength();
+        try(InputStream is = con.getInputStream()) {
+            TTFont font = new TTFont(is, len);
+            assertEquals(HeadTable.class, font.getHeadTable().getClass());
+        }
     }
 }

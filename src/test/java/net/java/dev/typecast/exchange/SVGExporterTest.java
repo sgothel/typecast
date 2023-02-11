@@ -27,8 +27,10 @@ import net.java.dev.typecast.ot.table.TableException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 
 public class SVGExporterTest extends TestCase {
@@ -49,10 +51,13 @@ public class SVGExporterTest extends TestCase {
     }
 
     public void testExportFont() throws URISyntaxException, IOException, TableException {
-        URL url = ClassLoader.getSystemResource("Lato-Regular.ttf");
-        File file = new File(url.toURI());
-        byte[] fontData = Files.readAllBytes(file.toPath());
-        TTFont font = new TTFont(fontData, 0);
+        final URL url = ClassLoader.getSystemResource("Lato-Regular.ttf");
+        final URLConnection con = url.openConnection();
+        final int len = con.getContentLength();
+        TTFont font;
+        try(InputStream is = con.getInputStream()) {
+            font = new TTFont(is, len);
+        }
         SVGExporter exporter = new SVGExporter(font, 32, 32, "abc", true, false);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         exporter.export(baos);

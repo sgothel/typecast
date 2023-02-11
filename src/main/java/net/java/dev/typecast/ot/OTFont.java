@@ -22,36 +22,29 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import net.java.dev.typecast.ot.table.*;
+import net.java.dev.typecast.ot.table.CmapTable;
+import net.java.dev.typecast.ot.table.GsubTable;
+import net.java.dev.typecast.ot.table.HdmxTable;
+import net.java.dev.typecast.ot.table.HeadTable;
+import net.java.dev.typecast.ot.table.HheaTable;
+import net.java.dev.typecast.ot.table.HmtxTable;
+import net.java.dev.typecast.ot.table.KernTable;
+import net.java.dev.typecast.ot.table.LocaTable;
+import net.java.dev.typecast.ot.table.MaxpTable;
+import net.java.dev.typecast.ot.table.NameRecord;
+import net.java.dev.typecast.ot.table.NameTable;
+import net.java.dev.typecast.ot.table.Os2Table;
+import net.java.dev.typecast.ot.table.PostTable;
+import net.java.dev.typecast.ot.table.Table;
+import net.java.dev.typecast.ot.table.TableDirectory;
+import net.java.dev.typecast.ot.table.VheaTable;
+
 
 /**
  * The TrueType font.
  * @author <a href="mailto:david.schweinsberg@gmail.com">David Schweinsberg</a>
  */
 public abstract class OTFont {
-
-
-    /**
-     * @param fontData OpenType/TrueType font file data.
-     * @param directoryOffset The Table Directory offset within the file.  For a
-     * regular TTF/OTF file this will be zero, but for a TTC (Font Collection)
-     * the offset is retrieved from the TTC header.  For a Mac font resource,
-     * offset is retrieved from the resource headers.
-     * @param tablesOrigin The point the table offsets are calculated from.
-     * Once again, in a regular TTF file, this will be zero.  In a TTC is is
-     * also zero, but within a Mac resource, it is the beginning of the
-     * individual font resource data.
-     * @throws java.io.IOException
-     */
-    OTFont(byte[] fontData, int tablesOrigin) throws IOException {
-
-        // Load the table directory
-//        dis.skip(directoryOffset);
-        TableDirectory tableDirectory = new TableDirectory(fontData);
-
-        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(fontData));
-        dis.mark(fontData.length);
-        dis.reset();
 
     private final Os2Table _os2;
     private final CmapTable _cmap;
@@ -63,6 +56,15 @@ public abstract class OTFont {
     private final PostTable _post;
     private final VheaTable _vhea;
     private final GsubTable _gsub;
+
+    /**
+     * 
+     * @param dis input stream marked at start with read-ahead set to known stream length
+     * @param tableDirectory
+     * @param tablesOrigin
+     * @throws IOException
+     */
+    OTFont(final DataInputStream dis, TableDirectory tableDirectory, final int tablesOrigin) throws IOException {
         // Load some prerequisite tables
         // (These are tables that are referenced by other tables, so we need to load
         // them first)
@@ -81,6 +83,8 @@ public abstract class OTFont {
         int length = seekTable(tableDirectory, dis, tablesOrigin, Table.vhea);
         if (length > 0) {
             _vhea = new VheaTable(dis);
+        } else {
+            _vhea = null;
         }
 
         // 'post' is required by 'glyf'
@@ -96,24 +100,26 @@ public abstract class OTFont {
         _name = new NameTable(dis, length);
         seekTable(tableDirectory, dis, tablesOrigin, Table.OS_2);
         _os2 = new Os2Table(dis);
+        
+        _gsub = null; // FIXME: delete?
     }
 
     public Os2Table getOS2Table() {
         return _os2;
     }
-    
+
     public CmapTable getCmapTable() {
         return _cmap;
     }
-    
+
     public HeadTable getHeadTable() {
         return _head;
     }
-    
+
     public HheaTable getHheaTable() {
         return _hhea;
     }
-    
+
     public HmtxTable getHmtxTable() {
         return _hmtx;
     }
@@ -153,12 +159,12 @@ public abstract class OTFont {
     public abstract Glyph getGlyph(int i);
 
     int seekTable(
-            TableDirectory tableDirectory,
-            DataInputStream dis,
-            int tablesOrigin,
-            int tag) throws IOException {
+            final TableDirectory tableDirectory,
+            final DataInputStream dis,
+            final int tablesOrigin,
+            final int tag) throws IOException {
         dis.reset();
-        TableDirectory.Entry entry = tableDirectory.getEntryByTag(tag);
+        final TableDirectory.Entry entry = tableDirectory.getEntryByTag(tag);
         if (entry == null) {
             return 0;
         }
