@@ -10,8 +10,6 @@ package net.java.dev.typecast.ot.table;
 
 import java.io.DataInput;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:david.schweinsberg@gmail.com">David Schweinsberg</a>
@@ -21,8 +19,6 @@ public class LocaTable implements Table {
     private int[] _offsets;
     private short _factor;
     private int _length;
-
-    private static final Logger logger = LoggerFactory.getLogger(LocaTable.class);
 
     public LocaTable(
             DataInput di,
@@ -48,7 +44,7 @@ public class LocaTable implements Table {
         int index = 0;
         for (int offset : _offsets) {
             if (offset < lastOffset) {
-                logger.error("Offset at index {} is bad ({} < {})", index, offset, lastOffset);
+                System.err.printf("LocaTable: Offset at index %d is bad (%d < %d)%n", index, offset, lastOffset);
             }
             lastOffset = offset;
             ++index;

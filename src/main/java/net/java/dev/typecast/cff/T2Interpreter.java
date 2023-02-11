@@ -20,8 +20,6 @@ package net.java.dev.typecast.cff;
 
 import java.util.ArrayList;
 import net.java.dev.typecast.ot.Point;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Type 2 Charstring Interpreter.  Operator descriptions are quoted from
@@ -29,6 +27,8 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:david.schweinsberg@gmail.com">David Schweinsberg</a>
  */
 public class T2Interpreter {
+
+    private static final boolean DEBUG = false;
     
     private static class SubrPair {
         final CharstringType2 cs;
@@ -42,8 +42,6 @@ public class T2Interpreter {
     private static final int ARGUMENT_STACK_LIMIT = 48;
     private static final int SUBR_STACK_LIMIT = 10;
     private static final int TRANSIENT_ARRAY_ELEMENT_COUNT = 32;
-    
-    private static final Logger logger = LoggerFactory.getLogger(T2Interpreter.class);
     
     private final Number[] _argStack = new Number[ARGUMENT_STACK_LIMIT];
     private int _argStackIndex = 0;
@@ -1201,9 +1199,9 @@ public class T2Interpreter {
      * Pop a value off the argument stack
      */
     private Number popArg() {
-        if (logger.isTraceEnabled()) {
-            logger.trace(
-                    "popArg: {} {}",
+        if (DEBUG) {
+            System.err.printf(
+                    "T2I: popArg: %s %s%n",
                     _argStack[_argStackIndex - 1],
                     java.util.Arrays.copyOfRange(_argStack, 0, _argStackIndex - 1));
         }
@@ -1215,9 +1213,9 @@ public class T2Interpreter {
      */
     private void pushArg(Number n) {
         _argStack[_argStackIndex++] = n;
-        if (logger.isTraceEnabled()) {
-            logger.trace(
-                    "pushArg: {} {}",
+        if (DEBUG) {
+            System.err.printf(
+                    "T2I: pushArg: %s %s%n",
                     n,
                     java.util.Arrays.copyOfRange(_argStack, 0, _argStackIndex - 1));
         }

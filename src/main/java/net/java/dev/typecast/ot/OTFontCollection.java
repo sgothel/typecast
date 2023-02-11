@@ -29,8 +29,7 @@ import net.java.dev.typecast.ot.mac.ResourceMap;
 import net.java.dev.typecast.ot.mac.ResourceReference;
 import net.java.dev.typecast.ot.mac.ResourceType;
 import net.java.dev.typecast.ot.table.TTCHeader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  *
@@ -38,10 +37,10 @@ import org.slf4j.LoggerFactory;
  */
 class OTFontCollection {
 
+    private final boolean DEBUG = false;
     private TTCHeader _ttcHeader;
     private OTFont[] _fonts;
 
-    private static final Logger logger = LoggerFactory.getLogger(OTFontCollection.class);
 
     public OTFont getFont(int i) {
         return _fonts[i];
@@ -89,15 +88,17 @@ class OTFontCollection {
             dis.skip(resourceHeader.getMapOffset());
             ResourceMap map = new ResourceMap(dis);
 
-            // Dump some info about the font suitcase
-            for (int i = 0; i < map.getResourceTypeCount(); ++i) {
-                logger.info(map.getResourceType(i).getTypeAsString());
-            }
+            if( DEBUG ) {
+                // Dump some info about the font suitcase
+                for (int i = 0; i < map.getResourceTypeCount(); ++i) {
+                    System.err.println(map.getResourceType(i).getTypeAsString());
+                }
 
-            ResourceType type = map.getResourceType("FOND");
-            for (int i = 0; i < type.getCount(); ++i) {
-                ResourceReference reference = type.getReference(i);
-                logger.info(reference.getName());
+                final ResourceType type = map.getResourceType("FOND");
+                for (int i = 0; i < type.getCount(); ++i) {
+                    final ResourceReference reference = type.getReference(i);
+                    System.err.println(reference.getName());
+                }
             }
 
             // Get the 'sfnt' resources

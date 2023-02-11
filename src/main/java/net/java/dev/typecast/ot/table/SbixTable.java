@@ -21,8 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This table provides access to bitmap data in a standard graphics format
@@ -31,6 +29,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SbixTable implements Table {
 
+    private static final boolean DEBUG = false;
+    
     public static class GlyphDataRecord {
         private final short _originOffsetX;
         private final short _originOffsetY;
@@ -46,7 +46,7 @@ public class SbixTable implements Table {
             
             // Check the graphicType is valid
             if (_graphicType != PNG) {
-                logger.error("Invalid graphicType: {}", _graphicType);
+                System.err.printf("SbixTable: Invalid graphicType: %d%n", _graphicType);
                 _data = null;
                 return;
             }
@@ -55,7 +55,7 @@ public class SbixTable implements Table {
             try {
                 di.readFully(_data);
             } catch (IOException e) {
-                logger.error("Reading too much data");
+                System.err.println("SbixTable: Reading too much data: "+e.getMessage());
             }
         }
         
@@ -89,11 +89,15 @@ public class SbixTable implements Table {
                 if (dataLength == 0)
                     continue;
                 bais.reset();
-                logger.trace("Skip: {}", _glyphDataOffset[i]);
+                if( DEBUG ) {
+                    System.err.printf("SbixTable: Skip: %d%n", _glyphDataOffset[i]);
+                }
                 bais.skip(_glyphDataOffset[i]);
                 _glyphDataRecord[i] = new GlyphDataRecord(new DataInputStream(bais), dataLength);
             }
-            logger.debug("Loaded Strike: ppem = {}, resolution = {}", _ppem, _resolution);
+            if( DEBUG ) {
+                System.err.printf("SbixTable: Loaded Strike: ppem = %d, resolution = %d%n", _ppem, _resolution);
+            }
         }
         
         public GlyphDataRecord[] getGlyphDataRecords() {
@@ -111,8 +115,6 @@ public class SbixTable implements Table {
     private final int _numStrikes;
     private final int[] _strikeOffset;
     private final Strike[] _strikes;
-
-    private static final Logger logger = LoggerFactory.getLogger(SbixTable.class);
 
     private SbixTable(DataInput di, int length, MaxpTable maxp) throws IOException {
 
