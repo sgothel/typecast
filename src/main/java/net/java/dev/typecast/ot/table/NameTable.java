@@ -97,12 +97,24 @@ public class NameTable implements Table {
         return _numberOfNameRecords;
     }
 
-    public NameRecord getRecord(int i) {
-        return _records[i];
+
+    public NameRecord getRecord(final int i) {
+        if(_numberOfNameRecords > i) {
+            return _records[i];
+        }
+        return null;
     }
 
+    public String getRecordsRecordString(final int i) {
+        if(_numberOfNameRecords > i) {
+            return _records[i].getRecordString();
+        } else {
+            return "";
+        }
+    }
+    
+    /** Return a named record string */
     public String getRecordString(short nameId) {
-
         // Search for the first instance of this name ID
         for (int i = 0; i < _numberOfNameRecords; i++) {
             if (_records[i].getNameId() == nameId) {
