@@ -78,7 +78,7 @@ public class HeadTable implements Table {
     private final short _indexToLocFormat;
     private final short _glyphDataFormat;
 
-    public HeadTable(DataInput di) throws IOException {
+    public HeadTable(final DataInput di) throws IOException {
         _versionNumber = di.readInt();
         _fontRevision = di.readInt();
         _checkSumAdjustment = di.readInt();
@@ -166,6 +166,7 @@ public class HeadTable implements Table {
         return _yMin;
     }
 
+    @Override
     public String toString() {
         return "'head' Table - Font Header\n--------------------------" +
                 "\n  'head' version:      " + Fixed.floatValue(_versionNumber) +
