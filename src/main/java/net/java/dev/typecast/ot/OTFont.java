@@ -123,8 +123,8 @@ public abstract class OTFont {
     public HmtxTable getHmtxTable() {
         return _hmtx;
     }
-    
-    MaxpTable getMaxpTable() {
+
+    public MaxpTable getMaxpTable() {
         return _maxp;
     }
 
@@ -172,6 +172,26 @@ public abstract class OTFont {
         return entry.getLength();
     }
 
+    public String getName(final int nameIndex) {
+        return _name.getRecordsRecordString(nameIndex);
+    }
+
+    public StringBuilder getAllNames(StringBuilder sb, final String separator) {
+        if(null != _name) {
+            if(null == sb) {
+                sb = new StringBuilder();
+            }
+            for(int i=0; i<_name.getNumberOfNameRecords(); i++) {
+                final NameRecord nr = _name.getRecord(i);
+                if( null != nr ) {
+                    sb.append( nr.getRecordString() ).append(separator);
+                }
+            }
+        }
+        return sb;
+    }
+    
+    @Override
     public String toString() {
         return _head.toString();
     }
