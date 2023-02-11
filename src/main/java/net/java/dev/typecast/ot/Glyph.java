@@ -18,17 +18,38 @@
 
 package net.java.dev.typecast.ot;
 
+import net.java.dev.typecast.math.AABBox;
+
 /**
  * An individual glyph within a font.
  * @author <a href="mailto:david.schweinsberg@gmail.com">David Schweinsberg</a>
  */
 public abstract class Glyph {
+    final int _glyph_id;
+    protected AABBox _bbox;
 
+    public Glyph(final int glyph_id) {
+        _glyph_id = glyph_id;
+    }
+    
+    /** Return the assigned glyph ID of this instance */
+    public final int getGlyphIndex() { return _glyph_id; }
+    
+    public abstract void clearPointData();
+
+    /** Return the AABBox in font-units */
+    public final AABBox getBBox() { return _bbox; }
+    
+    /** hmtx value */
     public abstract int getAdvanceWidth();
-
+    
+    /** hmtx value */
     public abstract short getLeftSideBearing();
 
     public abstract Point getPoint(int i);
 
     public abstract int getPointCount();
+    
+    @Override
+    public abstract String toString();
 }

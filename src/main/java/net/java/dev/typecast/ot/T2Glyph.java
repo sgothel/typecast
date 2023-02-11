@@ -17,10 +17,9 @@
  */
 package net.java.dev.typecast.ot;
 
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import net.java.dev.typecast.cff.CharstringType2;
 import net.java.dev.typecast.cff.T2Interpreter;
+import net.java.dev.typecast.math.AABBox;
 
 /**
  * An individual Type 2 Charstring glyph within a font.
@@ -29,28 +28,44 @@ import net.java.dev.typecast.cff.T2Interpreter;
 public class T2Glyph extends Glyph {
     private final short _leftSideBearing;
     private final int _advanceWidth;
-    private final Point[] _points;
-    private final Integer[] _hstems;
-    private final Integer[] _vstems;
+    private Point[] _points;
+    private Integer[] _hstems;
+    private Integer[] _vstems;
 
     /**
      * Construct a Glyph from a PostScript outline described by a Charstring.
+     * @param glyph_id the assigned glyph_id of this instance
      * @param cs The CharstringType2 describing the glyph.
      * @param lsb The Left Side Bearing.
      * @param advance The advance width.
      */
     public T2Glyph(
+            final int glyph_id, 
             CharstringType2 cs,
             short lsb,
             int advance) {
+        super( glyph_id );
         _leftSideBearing = lsb;
         _advanceWidth = advance;
         T2Interpreter t2i = new T2Interpreter();
         _points = t2i.execute(cs);
         _hstems = t2i.getHStems();
         _vstems = t2i.getVStems();
+        {
+            AABBox bbox = new AABBox();
+            for (Point p : _points) {
+                bbox.resize(p.x, p.y, 0);
+            }
+            _bbox = bbox;             
+        }
     }
 
+    public final void clearPointData() {
+        _points = null;
+        _hstems = null;
+        _vstems = null;
+    }
+    
     @Override
     public int getAdvanceWidth() {
         return _advanceWidth;
@@ -79,14 +94,12 @@ public class T2Glyph extends Glyph {
         return _vstems;
     }
     
-    public Rectangle2D getBounds() {
-        Rectangle r = null;
-        for (Point p : _points) {
-            if (r == null) {
-                r = new Rectangle(p.x, p.y, 0, 0);
-            }
-            r.add(new java.awt.Point(p.x, p.y));
-        }
-        return r != null ? r : new Rectangle(0, 0, 0, 0);
+    @Override
+    public String toString() {
+        return new StringBuilder()
+            .append("T2Glyph id ").append(_glyph_id).append(", points ").append(_points.length)
+            .append(", advance ").append(getAdvanceWidth())
+            .append(", ").append(_bbox)
+            .toString();
     }
 }

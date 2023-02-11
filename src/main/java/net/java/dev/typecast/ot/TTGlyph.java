@@ -17,6 +17,7 @@
  */
 package net.java.dev.typecast.ot;
 
+import net.java.dev.typecast.math.AABBox;
 import net.java.dev.typecast.ot.table.GlyfDescript;
 import net.java.dev.typecast.ot.table.GlyphDescription;
 
@@ -29,7 +30,7 @@ public class TTGlyph extends Glyph {
     private short _leftSideBearing;
     private int _advanceWidth;
     private Point[] _points;
-
+    
     /**
      * Construct a Glyph from a TrueType outline described by
      * a GlyphDescription.
@@ -38,11 +39,16 @@ public class TTGlyph extends Glyph {
      * @param advance The advance width.
      */
     public TTGlyph(GlyphDescription gd, short lsb, int advance) {
+        super( gd.getGlyphIndex() );
         _leftSideBearing = lsb;
         _advanceWidth = advance;
         describe(gd);
     }
 
+    public final void clearPointData() {
+        _points = null;
+    }
+    
     @Override
     public int getAdvanceWidth() {
         return _advanceWidth;
@@ -89,7 +95,7 @@ public class TTGlyph extends Glyph {
     private void describe(GlyphDescription gd) {
         int endPtIndex = 0;
         int pointCount = gd != null ? gd.getPointCount() : 0;
-        _points = new Point[pointCount + 2];
+        _points = new Point[pointCount /* + 2 */];
         for (int i = 0; i < pointCount; i++) {
             boolean endPt = gd.getEndPtOfContours(endPtIndex) == i;
             if (endPt) {
@@ -103,7 +109,18 @@ public class TTGlyph extends Glyph {
         }
 
         // Append the origin and advanceWidth points (n & n+1)
-        _points[pointCount] = new Point(0, 0, true, true);
-        _points[pointCount+1] = new Point(_advanceWidth, 0, true, true);
+        // _points[pointCount] = new Point(0, 0, true, true);
+        // _points[pointCount+1] = new Point(_advanceWidth, 0, true, true);
+        
+        _bbox = new AABBox(gd.getXMinimum(), gd.getYMinimum(), 0, gd.getXMaximum(), gd.getYMaximum(), 0);
+    }
+    
+    @Override
+    public String toString() {
+        return new StringBuilder()
+            .append("TTGlyph id ").append(_glyph_id).append(", points ").append(_points.length)
+            .append(", advance ").append(getAdvanceWidth())
+            .append(", ").append(_bbox)
+            .toString();
     }
 }
