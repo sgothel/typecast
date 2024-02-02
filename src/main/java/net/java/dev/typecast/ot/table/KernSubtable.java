@@ -47,7 +47,7 @@ public abstract class KernSubtable {
     public abstract int getKerningPairCount();
 
     public abstract KerningPair getKerningPair(int i);
-    
+
     public abstract void clearKerningPairs();
 
     public static KernSubtable read(final DataInput di) throws IOException {

@@ -41,7 +41,7 @@ public class TTFontTest extends TestCase {
      *
      * @param testName name of the test case
      */
-    public TTFontTest(String testName) {
+    public TTFontTest(final String testName) {
         super(testName);
     }
 
@@ -53,23 +53,23 @@ public class TTFontTest extends TestCase {
     }
 
     public void testLoadFont() throws URISyntaxException, IOException {
-        TTFont font = loadFontResource("Lato-Regular.ttf");
+        final TTFont font = loadFontResource("Lato-Regular.ttf");
         assertEquals(HeadTable.class, font.getHeadTable().getClass());
 
         dumpFont("Lato-Regular.txt", font);
     }
 
     public void testLoadColorFont() throws URISyntaxException, IOException {
-        TTFont font = loadFontResource("NotoColorEmoji.ttf");
+        final TTFont font = loadFontResource("NotoColorEmoji.ttf");
         dumpFont("NotoColorEmoji.txt", font);
     }
-    
+
     public void testLoadColorFont2() throws URISyntaxException, IOException {
-        TTFont font = loadFontResource("Gilbert-Color Bold Preview5.otf");
+        final TTFont font = loadFontResource("Gilbert-Color Bold Preview5.otf");
         dumpFont("Gilbert-Color Bold Preview5.txt", font);
     }
-    
-    private void dumpFont(String name, TTFont font)
+
+    private void dumpFont(final String name, final TTFont font)
             throws IOException, FileNotFoundException {
         new File("target/tmp").mkdirs();
         try (Writer out = new OutputStreamWriter(new FileOutputStream(new File("target/tmp/" + name)))) {
@@ -77,12 +77,12 @@ public class TTFontTest extends TestCase {
         }
     }
 
-    private TTFont loadFontResource(String name)
+    private TTFont loadFontResource(final String name)
             throws URISyntaxException, IOException {
         return loadFont( ClassLoader.getSystemResource(name) );
     }
 
-    private TTFont loadFont(URL url) throws URISyntaxException, IOException {
+    private TTFont loadFont(final URL url) throws URISyntaxException, IOException {
         final URLConnection con = url.openConnection();
         final int len = con.getContentLength();
         try(InputStream is = con.getInputStream()) {

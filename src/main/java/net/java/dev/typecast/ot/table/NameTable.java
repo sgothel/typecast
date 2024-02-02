@@ -61,50 +61,49 @@ import java.util.stream.Collectors;
  * The naming table allows multilingual strings to be associated with the
  * OpenType font file. These strings can represent copyright notices, font
  * names, family names, style names, and so on.
- * 
+ *
  * Other parts of the OpenType font that require these strings can refer to them
  * using a language-independent name ID. In addition to language variants, the
  * table also allows for platform-specific character-encoding variants. Clients
  * that need a particular string can look it up by its platform ID, encoding ID,
  * language ID and name ID. Note that different platforms may have different
  * requirements for the encoding of strings.
- * 
+ *
  * @author <a href="mailto:david.schweinsberg@gmail.com">David Schweinsberg</a>
- * 
+ *
  * @see "https://docs.microsoft.com/en-us/typography/opentype/spec/name"
  */
 public class NameTable implements Table {
 
-    @SuppressWarnings("unused")
-    private short _formatSelector;
-    private short _numberOfNameRecords;
-    private short _stringStorageOffset;
-    private NameRecord[] _records;
+    private final short _formatSelector;
+    private final short _numberOfNameRecords;
+    private final short _stringStorageOffset;
+    private final NameRecord[] _records;
 
-    public NameTable(DataInput di, int length) throws IOException {
+    public NameTable(final DataInput di, final int length) throws IOException {
         _formatSelector = di.readShort();
         _numberOfNameRecords = di.readShort();
         _stringStorageOffset = di.readShort();
         _records = new NameRecord[_numberOfNameRecords];
-        
+
         // Load the records, which contain the encoding information and string
         // offsets
         for (int i = 0; i < _numberOfNameRecords; i++) {
             _records[i] = new NameRecord(di);
         }
-        
+
         // Load the string data into a buffer so the records can copy out the
         // bits they are interested in
-        byte[] buffer = new byte[length - _stringStorageOffset];
+        final byte[] buffer = new byte[length - _stringStorageOffset];
         di.readFully(buffer);
-        
+
         // Now let the records get their hands on them
         for (int i = 0; i < _numberOfNameRecords; i++) {
             _records[i].loadString(
                     new DataInputStream(new ByteArrayInputStream(buffer)));
         }
     }
-    
+
     @Override
     public int getType() {
         return name;
@@ -123,7 +122,7 @@ public class NameTable implements Table {
     public short getNumberOfNameRecords() {
         return _numberOfNameRecords;
     }
-    
+
     /**
      * Offset16     stringOffset    Offset to start of string storage (from start of table).
      */
@@ -146,9 +145,9 @@ public class NameTable implements Table {
             return "";
         }
     }
-    
+
     /** Return a named record string */
-    public String getRecordString(short nameId) {
+    public String getRecordString(final short nameId) {
         // Search for the first instance of this name ID
         for (int i = 0; i < _numberOfNameRecords; i++) {
             if (_records[i].getNameId() == nameId) {

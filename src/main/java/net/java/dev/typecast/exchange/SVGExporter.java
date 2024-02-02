@@ -55,15 +55,15 @@ public class SVGExporter
 
     static {
         String  temp;
-        try { 
-            temp = System.getProperty (PROPERTY_LINE_SEPARATOR, 
-                                       PROPERTY_LINE_SEPARATOR_DEFAULT); 
-        } catch (SecurityException e) { 
+        try {
+            temp = System.getProperty (PROPERTY_LINE_SEPARATOR,
+                                       PROPERTY_LINE_SEPARATOR_DEFAULT);
+        } catch (final SecurityException e) {
             temp = PROPERTY_LINE_SEPARATOR_DEFAULT;
         }
         EOL = temp;
     }
-    
+
     private static final String QUOT_EOL = XML_CHAR_QUOT + EOL;
 
     /**
@@ -71,25 +71,25 @@ public class SVGExporter
      * {0} SVG public ID
      * {1} SVG system ID
      */
-    private static final String CONFIG_SVG_BEGIN = 
+    private static final String CONFIG_SVG_BEGIN =
         "SVGFont.config.svg.begin";
 
     /**
      * Defines the SVG start fragment that exercise the generated
      * Font.
      */
-    private static final String CONFIG_SVG_TEST_CARD_START = 
+    private static final String CONFIG_SVG_TEST_CARD_START =
         "SVGFont.config.svg.test.card.start";
 
     /**
      * Defines the end of the SVG fragment that exercise the generated
      * Font.
      */
-    private static final String CONFIG_SVG_TEST_CARD_END = 
+    private static final String CONFIG_SVG_TEST_CARD_END =
         "SVGFont.config.svg.test.card.end";
 
-    private static String encodeEntities(String s) {
-        StringBuilder sb = new StringBuilder();
+    private static String encodeEntities(final String s) {
+        final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             switch (s.charAt(i)) {
                 case XML_CHAR_LT:
@@ -115,20 +115,20 @@ public class SVGExporter
         return sb.toString();
     }
 
-    private static String getContourAsSVGPathData(Glyph glyph, int startIndex, int count) {
+    private static String getContourAsSVGPathData(final Glyph glyph, final int startIndex, final int count) {
 
         // If this is a single point on it's own, we can't do anything with it
         if (glyph.getPoint(startIndex).endOfContour) {
             return "";
         }
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         int offset = 0;
 
         while (offset < count) {
-            Point point = glyph.getPoint(startIndex + offset%count);
-            Point point_plus1 = glyph.getPoint(startIndex + (offset+1)%count);
-            Point point_plus2 = glyph.getPoint(startIndex + (offset+2)%count);
+            final Point point = glyph.getPoint(startIndex + offset%count);
+            final Point point_plus1 = glyph.getPoint(startIndex + (offset+1)%count);
+            final Point point_plus2 = glyph.getPoint(startIndex + (offset+2)%count);
 
             if (offset == 0) {
                 sb.append(PATH_MOVE)
@@ -196,17 +196,17 @@ public class SVGExporter
         return sb.toString();
     }
 
-    private static String getSVGFontFaceElement(OTFont font) {
-        StringBuilder sb = new StringBuilder();
-        String fontFamily = font.getNameTable().getRecordString(ID.nameFontFamilyName);
-        int unitsPerEm = font.getHeadTable().getUnitsPerEm();
-        String panose = font.getOS2Table().getPanose().toString();
-        short ascent = font.getHheaTable().getAscender();
-        short descent = font.getHheaTable().getDescender();
-        int baseline = 0; // bit 0 of head.flags will indicate if this is true
+    private static String getSVGFontFaceElement(final OTFont font) {
+        final StringBuilder sb = new StringBuilder();
+        final String fontFamily = font.getNameTable().getRecordString(ID.nameFontFamilyName);
+        final int unitsPerEm = font.getHeadTable().getUnitsPerEm();
+        final String panose = font.getOS2Table().getPanose().toString();
+        final short ascent = font.getHheaTable().getAscender();
+        final short descent = font.getHheaTable().getDescender();
+        final int baseline = 0; // bit 0 of head.flags will indicate if this is true
 
 	// 	<!ELEMENT font-face (%descTitleMetadata;,font-face-src?,definition-src?) >
-	//           <!ATTLIST font-face 
+	//           <!ATTLIST font-face
 	//             %stdAttrs;
 	//             font-family CDATA #IMPLIED
 	//             font-style CDATA #IMPLIED
@@ -241,7 +241,7 @@ public class SVGExporter
 	//             strikethrough-thickness %Number; #IMPLIED
 	//             overline-position %Number; #IMPLIED
 	//             overline-thickness %Number; #IMPLIED >
-	
+
         sb.append(XML_OPEN_TAG_START).append(SVG_FONT_FACE_TAG).append(EOL)
             .append(XML_TAB).append(SVG_FONT_FAMILY_ATTRIBUTE).append(XML_EQUAL_QUOT).append(fontFamily).append(QUOT_EOL)
             .append(XML_TAB).append(SVG_UNITS_PER_EM_ATTRIBUTE).append(XML_EQUAL_QUOT).append(unitsPerEm).append(QUOT_EOL)
@@ -250,7 +250,7 @@ public class SVGExporter
             .append(XML_TAB).append(SVG_DESCENT_ATTRIBUTE).append(XML_EQUAL_QUOT).append(descent).append(QUOT_EOL)
             .append(XML_TAB).append(SVG_ALPHABETIC_ATTRIBUTE).append(XML_EQUAL_QUOT).append(baseline).append(XML_CHAR_QUOT)
             .append(XML_OPEN_TAG_END_NO_CHILDREN).append(EOL);
- 
+
         return sb.toString();
     }
 
@@ -265,9 +265,9 @@ public class SVGExporter
      * @param forceAscii Force the use of the ASCII character map
      * @throws net.java.dev.typecast.ot.table.TableException
      */
-    private static void writeFontAsSVGFragment(PrintStream ps, TTFont font, String id, int first, int last, boolean forceAscii)
+    private static void writeFontAsSVGFragment(final PrintStream ps, final TTFont font, final String id, final int first, final int last, final boolean forceAscii)
     throws TableException {
-        int horiz_advance_x = font.getOS2Table().getAvgCharWidth();
+        final int horiz_advance_x = font.getOS2Table().getAvgCharWidth();
 
         ps.print(XML_OPEN_TAG_START);
         ps.print(SVG_FONT_TAG);
@@ -291,13 +291,13 @@ public class SVGExporter
         // Decide upon a cmap table to use for our character to glyph look-up
         CmapFormat cmapFmt;
         if (forceAscii) {
-            
+
             // We've been asked to use the ASCII/Macintosh cmap format
             cmapFmt = font.getCmapTable().getCmapFormat(
                 ID.platformMacintosh,
                 ID.encodingRoman);
         } else {
-            
+
             // The default behaviour is to use the Unicode cmap encoding
             cmapFmt = font.getCmapTable().getCmapFormat(
                 ID.platformMicrosoft,
@@ -316,18 +316,18 @@ public class SVGExporter
 
         // If this font includes arabic script, we want to specify substitutions
         // for initial, medial, terminal & isolated cases.
-        GsubTable gsub = font.getGsubTable();
+        final GsubTable gsub = font.getGsubTable();
         SingleSubst initialSubst = null;
         SingleSubst medialSubst = null;
         SingleSubst terminalSubst = null;
         if (gsub != null && gsub.getScriptList() != null) {
-            Script s = gsub.getScriptList().findScript(SCRIPT_TAG_ARAB);
+            final Script s = gsub.getScriptList().findScript(SCRIPT_TAG_ARAB);
             if (s != null) {
-                LangSys ls = s.getDefaultLangSys();
+                final LangSys ls = s.getDefaultLangSys();
                 if (ls != null) {
-                    Feature init = gsub.getFeatureList().findFeature(ls, FEATURE_TAG_INIT);
-                    Feature medi = gsub.getFeatureList().findFeature(ls, FEATURE_TAG_MEDI);
-                    Feature fina = gsub.getFeatureList().findFeature(ls, FEATURE_TAG_FINA);
+                    final Feature init = gsub.getFeatureList().findFeature(ls, FEATURE_TAG_INIT);
+                    final Feature medi = gsub.getFeatureList().findFeature(ls, FEATURE_TAG_MEDI);
+                    final Feature fina = gsub.getFeatureList().findFeature(ls, FEATURE_TAG_FINA);
 
                     initialSubst = (SingleSubst)
                         gsub.getLookupList().getLookup(init, 0).getSubtable(0);
@@ -346,7 +346,7 @@ public class SVGExporter
         try {
             // Include our requested range
             for (int i = first; i <= last; i++) {
-                int glyphIndex = cmapFmt.mapCharCode(i);
+                final int glyphIndex = cmapFmt.mapCharCode(i);
 
                 if (glyphIndex > 0) {
                     ps.println(getGlyphAsSVG(
@@ -363,15 +363,15 @@ public class SVGExporter
             }
 
             // Output kerning pairs from the requested range
-            KernTable kern = font.getKernTable();
+            final KernTable kern = font.getKernTable();
             if (kern != null) {
-                KernSubtable kst = kern.getSubtable(0);
-                PostTable post = font.getPostTable();
+                final KernSubtable kst = kern.getSubtable(0);
+                final PostTable post = font.getPostTable();
                 for (int i = 0; i < kst.getKerningPairCount(); i++) {
                     ps.println(getKerningPairAsSVG(kst.getKerningPair(i), post));
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.err.println(e.getMessage());
         }
 
@@ -381,14 +381,14 @@ public class SVGExporter
     }
 
     private static String getGlyphAsSVG(
-            OTFont font,
-            Glyph glyph,
-            int glyphIndex,
-            int defaultHorizAdvanceX,
-            String attrib,
-            String code) {
+            final OTFont font,
+            final Glyph glyph,
+            final int glyphIndex,
+            final int defaultHorizAdvanceX,
+            final String attrib,
+            final String code) {
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         int firstIndex = 0;
         int count = 0;
         int i;
@@ -434,7 +434,7 @@ public class SVGExporter
         }
 
         sb.append(XML_OPEN_TAG_END_NO_CHILDREN);
- 
+
         // Chop-up the string into 255 character lines
         chopUpStringBuffer(sb);
 
@@ -442,16 +442,16 @@ public class SVGExporter
     }
 
     private static String getGlyphAsSVG(
-            TTFont font,
-            Glyph glyph,
-            int glyphIndex,
-            int defaultHorizAdvanceX,
-            SingleSubst arabInitSubst,
-            SingleSubst arabMediSubst,
-            SingleSubst arabTermSubst,
-            String code) {
+            final TTFont font,
+            final Glyph glyph,
+            final int glyphIndex,
+            final int defaultHorizAdvanceX,
+            final SingleSubst arabInitSubst,
+            final SingleSubst arabMediSubst,
+            final SingleSubst arabTermSubst,
+            final String code) {
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         boolean substituted = false;
 
         // arabic = "initial | medial | terminal | isolated"
@@ -525,8 +525,8 @@ public class SVGExporter
         return sb.toString();
     }
 
-    private static String getKerningPairAsSVG(KerningPair kp, PostTable post) {
-        StringBuilder sb = new StringBuilder();
+    private static String getKerningPairAsSVG(final KerningPair kp, final PostTable post) {
+        final StringBuilder sb = new StringBuilder();
         sb.append(XML_OPEN_TAG_START).append(SVG_HKERN_TAG).append(XML_SPACE);
         sb.append(SVG_G1_ATTRIBUTE).append(XML_EQUAL_QUOT);
 
@@ -543,25 +543,25 @@ public class SVGExporter
         return sb.toString();
     }
 
-    private static void writeSvgBegin(PrintStream ps) {
+    private static void writeSvgBegin(final PrintStream ps) {
         ps.println(Messages.formatMessage(CONFIG_SVG_BEGIN,
                                           new Object[]{SVG_PUBLIC_ID, SVG_SYSTEM_ID}));
-                   
+
     }
-        
-    private static void writeSvgDefsBegin(PrintStream ps) {
+
+    private static void writeSvgDefsBegin(final PrintStream ps) {
         ps.println(XML_OPEN_TAG_START + SVG_DEFS_TAG + XML_OPEN_TAG_END_CHILDREN);
     }
 
-    private static void writeSvgDefsEnd(PrintStream ps) {
+    private static void writeSvgDefsEnd(final PrintStream ps) {
          ps.println(XML_CLOSE_TAG_START + SVG_DEFS_TAG + XML_CLOSE_TAG_END);
     }
 
-    private static void writeSvgEnd(PrintStream ps) {
+    private static void writeSvgEnd(final PrintStream ps) {
         ps.println(XML_CLOSE_TAG_START + SVG_SVG_TAG + XML_CLOSE_TAG_END);
     }
 
-    private static void writeSvgTestCard(PrintStream ps, String fontFamily) {
+    private static void writeSvgTestCard(final PrintStream ps, final String fontFamily) {
         ps.println(Messages.formatMessage(CONFIG_SVG_TEST_CARD_START, null));
         ps.println(fontFamily);
         ps.println(Messages.formatMessage(CONFIG_SVG_TEST_CARD_END, null));
@@ -570,11 +570,11 @@ public class SVGExporter
     private final TTFont _font;
     private final int _low;
     private final int _high;
-    private String _id;
+    private final String _id;
     private final boolean _ascii;
     private final boolean _testCard;
-    
-    public SVGExporter(TTFont font, int low, int high, String id, boolean ascii, boolean testCard) {
+
+    public SVGExporter(final TTFont font, final int low, final int high, final String id, final boolean ascii, final boolean testCard) {
         _font = font;
         _low = low;
         _high = high;
@@ -589,9 +589,9 @@ public class SVGExporter
      * @throws net.java.dev.typecast.ot.table.TableException
      */
     @Override
-    public void export(OutputStream os) throws TableException {
-        PrintStream ps = new PrintStream(os);
-        
+    public void export(final OutputStream os) throws TableException {
+        final PrintStream ps = new PrintStream(os);
+
         // Write the various parts of the SVG file
         writeSvgBegin(ps);
         writeSvgDefsBegin(ps);
@@ -604,13 +604,13 @@ public class SVGExporter
             _ascii);
         writeSvgDefsEnd(ps);
         if (_testCard) {
-            String fontFamily = _font.getNameTable().getRecordString(ID.nameFontFamilyName);
+            final String fontFamily = _font.getNameTable().getRecordString(ID.nameFontFamilyName);
             writeSvgTestCard(ps, fontFamily);
         }
         writeSvgEnd(ps);
     }
 
-    private static void chopUpStringBuffer(StringBuilder sb) {
+    private static void chopUpStringBuffer(final StringBuilder sb) {
         if (sb.length() < 256) {
         } else {
             // Being rather simplistic about it, for now we'll insert a newline after
@@ -624,7 +624,7 @@ public class SVGExporter
         }
     }
 
-    private static int midValue(int a, int b) {
+    private static int midValue(final int a, final int b) {
         return a + (b - a)/2;
     }
 }

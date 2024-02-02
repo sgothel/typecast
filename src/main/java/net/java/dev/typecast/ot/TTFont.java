@@ -50,9 +50,9 @@ public class TTFont extends OTFont {
         // Load the table directory
         dis.reset(); // throws if not marked or mark not supported
         dis.skip(directoryOffset);
-        return new TableDirectory(dis);        
+        return new TableDirectory(dis);
     }
-    
+
     private static DataInputStream openStream(final File file) throws IOException {
         if (!file.exists()) {
             throw new IOException("File <"+file.getName()+"> doesn't exist.");
@@ -63,18 +63,18 @@ public class TTFont extends OTFont {
             throw new IllegalArgumentException("stream of type "+bis.getClass().getName()+" doesn't support mark");
         }
         bis.mark(streamLen);
-        return new DataInputStream(bis);        
+        return new DataInputStream(bis);
     }
-    
+
     private static DataInputStream openStream(final InputStream is, final int streamLen) throws IOException {
         final BufferedInputStream bis = new BufferedInputStream(is, streamLen);
         if( !bis.markSupported() ) {
             throw new IllegalArgumentException("stream of type "+is.getClass().getName()+" doesn't support mark");
         }
         bis.mark(streamLen);
-        return new DataInputStream(bis);        
+        return new DataInputStream(bis);
     }
-    
+
     /**
      * Constructor
      * @param file standalone font file
@@ -94,7 +94,7 @@ public class TTFont extends OTFont {
     public TTFont(final InputStream is, final int streamLen) throws IOException {
         this(openStream(is, streamLen), 0, 0);
     }
-    
+
     /**
      * Constructor
      * @param dis input stream marked at start with read-ahead set to known stream length
@@ -108,7 +108,7 @@ public class TTFont extends OTFont {
     }
 
     /**
-     * 
+     *
      * @param dis input stream marked at start with read-ahead set to known stream length
      * @param tableDirectory
      * @param tablesOrigin
@@ -120,8 +120,8 @@ public class TTFont extends OTFont {
         // 'loca' is required by 'glyf'
         int length = seekTable(tableDirectory, dis, tablesOrigin, Table.loca);
         if (length > 0) {
-            LocaTable loca = new LocaTable(dis, length, this.getHeadTable(), this.getMaxpTable());
-            
+            final LocaTable loca = new LocaTable(dis, length, this.getHeadTable(), this.getMaxpTable());
+
             // If this is a TrueType outline, then we'll have at least the
             // 'glyf' table (along with the 'loca' table)
             length = seekTable(tableDirectory, dis, tablesOrigin, Table.glyf);
@@ -129,7 +129,7 @@ public class TTFont extends OTFont {
         } else {
             _glyf = null;
         }
-        
+
         length = seekTable(tableDirectory, dis, tablesOrigin, Table.svg);
         if (length > 0) {
             _svg = new SVGTable(dis);
@@ -169,7 +169,7 @@ public class TTFont extends OTFont {
     public GlyfTable getGlyfTable() {
         return _glyf;
     }
-    
+
     /**
      * Optional {@link SVGTable}.
      */
@@ -207,7 +207,7 @@ public class TTFont extends OTFont {
     }
 
     @Override
-    public void dumpTo(Writer out) throws IOException {
+    public void dumpTo(final Writer out) throws IOException {
         super.dumpTo(out);
         dump(out, getGlyfTable());
         dump(out, getSvgTable());
