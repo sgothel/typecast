@@ -182,7 +182,6 @@ public abstract class GlyfDescript extends Program implements GlyphDescription {
             int glyphIndex,
             short numberOfContours,
             DataInput di) throws IOException {
-        _glyphIndex = glyphIndex;
         _parentTable = parentTable;
         _glyphIndex = glyphIndex;
         _numberOfContours = numberOfContours;

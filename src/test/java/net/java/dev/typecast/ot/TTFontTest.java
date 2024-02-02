@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URISyntaxException;
@@ -78,9 +79,7 @@ public class TTFontTest extends TestCase {
 
     private TTFont loadFontResource(String name)
             throws URISyntaxException, IOException {
-        URL url = ClassLoader.getSystemResource(name);
-        TTFont font = loadFont(url);
-        return font;
+        return loadFont( ClassLoader.getSystemResource(name) );
     }
 
     private TTFont loadFont(URL url) throws URISyntaxException, IOException {
